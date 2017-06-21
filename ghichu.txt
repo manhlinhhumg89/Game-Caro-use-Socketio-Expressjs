@@ -1,0 +1,10 @@
+b1: cai express
+b2: cai Socket.io
+- Code tren server lang nghe su kien tu client
+- code tren client ket noi len server
+- moi lan co connect tu client len server thi moi client duoc tao ra 1 bien socket
+trong do dai dien la socket.id
+- on la lang nghe su kien tu client gui len
+- neu muon disconnect thi phai viet trong function(socket
+) bang cau lenh: socket.on("disconnect",callback)
+b3: code(phia client: emit) den server(on)

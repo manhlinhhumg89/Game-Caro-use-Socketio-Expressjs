@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Socket</title>
+    <link rel="shortcut icon" href="">
+    <script src="jquery.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-------thu vien socket io cho phia client------>
+    <script src=" socket.io/socket.io.js"></script>
+    <style>
+
+    </style>
+</head>
+<body bgcolor="#a9a9a9">
+<div id="loginForm" style="margin-bottom: 30px">
+    <h3>Whats your name</h3>
+    <input type="text" id="txtUsername"/>
+    <input type="button" value="Register" id="btnRegister">
+</div>
+<div id="boxContent"></div>
+<div id ="qcontent"></div>
+<script>
+    //ket noi len server
+    var socket = io("http://localhost:3000")
+    //Buoc2-2: khach hang lang nghe du lieu tu server tra ve cho tat ca
+    //khach hang
+    socket.on("server-send-mau", function (data) {
+        $("body").attr("bgcolor", data)
+    })
+    socket.on("server-send-danhsach-user", function (data) {
+        $("#boxContent").html("");
+        data.forEach(function (i) {
+            $("#boxContent").append("<div class='user'>" + i + "</div>")
+        })
+    })
+
+    $(document).ready(function () {
+        //nguoi choi emit ten dang nhap len server
+        $("#btnRegister").click(function () {
+            socket.emit("client-send-name", $("#txtUsername").val())
+        })
+    })
+
+    const div = d3.select("body").append("div").attr("id", "content");
+    // create <svg>
+    const svg = div.append("svg").attr("width", 800).attr("height", 500);
+    //-------------------------------------------------------
+    // loop through 8 rows and 8 columns to draw the chess board
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            // draw each chess field
+            const box = svg.append("rect")
+                .attr("x", i * 50)
+                .attr("y", j * 50)
+                .attr("width", 50)
+                .attr("height", 50)
+                .attr("id", "b" + i + j)
+                .on("click", function () {
+                    let selected = d3.select(this);
+                    socket.emit("su-kien-click", {x: selected.attr('x'), y: selected.attr('y')})
+
+                });
+            if ((i + j) % 2 === 0) {
+                box.attr("fill", "beige");
+            } else {
+                box.attr("fill", "gray");
+            }
+        }
+    }
+let cb = (mat,value)=>{
+    let count =0;
+    for(let  i=0;i< 5;i++){
+        if(mat[1][i]===value){
+            count++;
+        }
+        if(count === 5) {
+            console.log("ban da chien thang")
+        }
+    }
+}
+    //----------test thu--------
+    socket.on("phat-su-kien-thang-thua",function (data) {
+        const win = svg
+            .append("text")
+            .attr("x",500)
+            .attr("y",200)
+            .text(data)
+            .style("fill","red")
+            .style("font-size", "40px")
+    })
+    socket.on("khong-cho-doi-thu-click-khi-thua",function () {
+        $('#content').css('pointer-events', 'none');
+    })
+    //----------------------------
+    //----------------------------
+    socket.on("server-send-data", function (data) {
+
+        console.log("gia tri ma client nhan tu server:")
+        console.log("mang nguoi choi :" + data.ArrId)
+        console.log("Id:" + data.name);
+        console.log("nguoi cho thu:", data.nguoichoi)
+        console.log("Ma tran cac nuoc di:",data.Board)
+        console.log("Gia tri cua nguoi choi:"+ data.value)
+        console.log("x_client:" + data.x);
+        console.log("y_client:" + data.y);
+        let matrix = data.Board;
+        let Cur_Row = parseInt(data.x);
+        let Cur_Col = parseInt(data.y);
+        let Value = parseInt(data.value);
+        const tick = svg
+            .append("text")
+            .attr("x", parseInt(data.x))
+            .attr("y", parseInt(data.y))
+            .attr("text-anchor", "middle")
+            .attr("dx", 50 / 2)
+            .attr("dy", 50 / 2 + 8)
+            .text(function () {
+                if (data.nguoichoi === 1) {
+                    return "X"
+                }
+                else if (data.nguoichoi === 0) {
+                    return "O"
+                }
+            })
+            .style("font-weight", "bold")
+            .style("font-size", "30px")
+            .style("fill", function () {
+                if (data.nguoichoi === 1) {
+                    return "blue"
+                }
+                else if (data.nguoichoi === 0) {
+                    return "red"
+                }
+            })
+        //kiem tra thang thua voi ma tran tra ve tu server
+        cb(matrix,data.value);
+    })
+</script>
+</body>
+</html>
