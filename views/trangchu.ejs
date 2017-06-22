@@ -11,7 +11,7 @@
 
     </style>
 </head>
-<body bgcolor="#a9a9a9">
+<body bgcolor="#79CDCD">
 <div id="loginForm" style="margin-bottom: 30px">
     <h3>Whats your name</h3>
     <input type="text" id="txtUsername"/>
@@ -88,6 +88,7 @@ let cb = (mat,value)=>{
             .style("fill","red")
             .style("font-size", "40px")
     })
+    //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co
     socket.on("khong-cho-doi-thu-click-khi-thua",function () {
         $('#content').css('pointer-events', 'none');
     })
