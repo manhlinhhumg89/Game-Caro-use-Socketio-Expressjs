@@ -3,16 +3,19 @@
 <head>
     <title>Socket</title>
     <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="jquery.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <!-------thu vien socket io cho phia client------>
     <script src=" socket.io/socket.io.js"></script>
     <style>
-
+        body{
+            background-color: #79CDCD;
+        }
     </style>
 </head>
-<body bgcolor="#79CDCD">
-<div id="loginForm" style="margin-bottom: 30px">
+<body >
+<div id="loginForm" style="margin-bottom: 30px " class="text-center">
     <h3>Whats your name</h3>
     <input type="text" id="txtUsername"/>
     <input type="button" value="Register" id="btnRegister">
@@ -24,9 +27,7 @@
     var socket = io("http://localhost:3000")
     //Buoc2-2: khach hang lang nghe du lieu tu server tra ve cho tat ca
     //khach hang
-    socket.on("server-send-mau", function (data) {
-        $("body").attr("bgcolor", data)
-    })
+
     socket.on("server-send-danhsach-user", function (data) {
         $("#boxContent").html("");
         data.forEach(function (i) {
@@ -41,9 +42,9 @@
         })
     })
 
-    const div = d3.select("body").append("div").attr("id", "content");
+    const div = d3.select("body").append("div").attr("id", "content").style("text-align","center");
     // create <svg>
-    const svg = div.append("svg").attr("width", 800).attr("height", 500);
+    const svg = div.append("svg").attr("width", 1200).attr("height", 600);
     //-------------------------------------------------------
     // loop through 8 rows and 8 columns to draw the chess board
     for (let i = 0; i < 8; i++) {
@@ -78,24 +79,23 @@ let cb = (mat,value)=>{
         }
     }
 }
-    //----------test thu--------
+    //----------In len man hinh nguoi choi bi thua va nguoi thang cuoc--------
     socket.on("phat-su-kien-thang-thua",function (data) {
-        const win = svg
+        const lost = svg
             .append("text")
-            .attr("x",500)
+            .attr("x",400)
             .attr("y",200)
             .text(data)
             .style("fill","red")
             .style("font-size", "40px")
     })
-    //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co
+      //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co
     socket.on("khong-cho-doi-thu-click-khi-thua",function () {
         $('#content').css('pointer-events', 'none');
     })
     //----------------------------
     //----------------------------
     socket.on("server-send-data", function (data) {
-
         console.log("gia tri ma client nhan tu server:")
         console.log("mang nguoi choi :" + data.ArrId)
         console.log("Id:" + data.name);
@@ -130,7 +130,7 @@ let cb = (mat,value)=>{
                     return "blue"
                 }
                 else if (data.nguoichoi === 0) {
-                    return "red"
+                    return "FF0000"
                 }
             })
         //kiem tra thang thua voi ma tran tra ve tu server
