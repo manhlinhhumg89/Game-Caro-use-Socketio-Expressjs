@@ -57,6 +57,7 @@
                 .attr("width", 50)
                 .attr("height", 50)
                 .attr("id", "b" + i + j)
+                .style("stroke","black")
                 .on("click", function () {
                     let selected = d3.select(this);
                     socket.emit("su-kien-click", {x: selected.attr('x'), y: selected.attr('y')})
@@ -65,7 +66,7 @@
             if ((i + j) % 2 === 0) {
                 box.attr("fill", "beige");
             } else {
-                box.attr("fill", "gray");
+                box.attr("fill", "beige");
             }
         }
     }
