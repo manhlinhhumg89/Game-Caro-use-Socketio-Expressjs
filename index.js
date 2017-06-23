@@ -45,7 +45,7 @@ let Arr_Board = Array.matrix(8, 0)
 //Kiểm tra theo phương ngang từ vị trí hiện tại đi sang trái và sang phải đếm xem có đủ 5 quân cùng giá trị thì trả về true
 let Horizontal = (Mat, Cur_row, Cur_col, Value) => {
     //di sang ben trai
-    let i = Cur_col;
+    /*let i = Cur_col;
     let count_left = 0;
     let count_right = 0;
     while (Mat[Cur_row][i - 1] === Value && i >= 0) {
@@ -59,6 +59,29 @@ let Horizontal = (Mat, Cur_row, Cur_col, Value) => {
         j += 1;
     }
     if ((count_left + count_right + 1 >= 5)) {
+        return 1;
+    }*/
+    let count_left =0;
+    let count_right =0;
+    //Di sang phia ben trai so voi vi tri hien tai
+    for(let i = Cur_col; i>=0; i--){
+        if(Mat[Cur_row][i]===Value){
+            count_left++;
+        }
+        else{
+            break;
+        }
+    }
+    //Di sang phia ben phai so voi vi tri hien tai
+    for(let j = Cur_col+1;j< 8; j++){
+        if(Mat[Cur_row][j]===Value){
+            count_right++;
+        }
+        else{
+            break;
+        }
+    }
+    if(count_right + count_left >=5){
         return 1;
     }
 }
@@ -136,7 +159,7 @@ let Diagonal_main = (Mat, Cur_row, Cur_col, Value) =>{
     }
     //Kiểm tra theo phương đường chéo chính phía dưới bên phải so với vị trí quân hiện tại
     for(let j=Cur_row+1; j<8; j++){
-        if(Mat[j][Cur_col+temp2]){
+        if(Mat[j][Cur_col+temp2]===Value){
             count_right_down++;
             temp2++;
         }
@@ -148,7 +171,7 @@ let Diagonal_main = (Mat, Cur_row, Cur_col, Value) =>{
         return 1
     }
 }
-//Ket thuc
+//Ket thuc kiem tra
 io.on("connection", function (socket) {
     console.log("co nguoi ket noi:" + socket.id)
     //lang nghe su kien tu client gui len
@@ -182,7 +205,7 @@ io.on("connection", function (socket) {
                         value: 1
                     })
 
-                    if (Horizontal(Arr_Board, Row, Columb, 1)) {
+                     if (Horizontal(Arr_Board, Row, Columb, 1)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
@@ -202,6 +225,7 @@ io.on("connection", function (socket) {
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
                     }
+
                 }
             }
             else {
@@ -217,7 +241,7 @@ io.on("connection", function (socket) {
                         value: 2
                     })
 
-                    if (Horizontal(Arr_Board, Row, Columb, 2)) {
+                     if (Horizontal(Arr_Board, Row, Columb, 2)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
@@ -237,6 +261,7 @@ io.on("connection", function (socket) {
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
                     }
+
                 }
             }
         }
