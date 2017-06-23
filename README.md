@@ -7,17 +7,17 @@ Chương trình chơi cờ caro với 2 người chơi (dùng D3 js, socket.io)
 * Một ván cờ caro Việt Nam với các quân cờ dạng X,O.
 ![co caro](CaroVN.jpg)
 # Các công nghệ sử dụng để xây dựng chương trình
-1. Socket.io
+## Socket.io
 * Socket io là một thư viện Javascript dùng để phát triển các ứng dụng thời gian thực. Thư viện Socket.IO được phát triển để dùng cho cả client và server(chạy Node.js) 
 * Đầu tiên thư việc Socket.IO có thể được cài đặt trên server (Node.js) sử dụng chương trình quản lý package Node hay NPM. Sau khi cài đặt bạn có thể khởi động Socket.IO như sau: 
  ```javascript 
         var socket = require('socket.io');
 ```
 * Với việc Socket.IO được sử dụng trên server thì sau đó server sẽ cung cấp một địa chỉ URL để client (trình duyệt ) có thể tải thư viện Socket.IO này về từ server và nhúng vào trang như sau:
-  ```javascript 
+```javascript 
         <script src="/socket.io/socket.io.js"></script>
 ```
-2. D3.js 
+## D3.js 
 * Là một thư viện rất nổi tiếng trong thế giới Web Visualization, D3.js có thể sử dụng để trực quan hóa dữ liệu, vẽ các biểu đồ, đồ thị trực quan, bản đồ, ... thậm chí làm được cả Game. D3 vừa ra mắt 4.0, với các chức năng mới như modular, composed of small libraries. 
 
 
