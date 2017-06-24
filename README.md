@@ -28,12 +28,12 @@ Chương trình chơi cờ caro với 2 người chơi (dùng D3 js, socket.io)
 2. Vào thư mục vừa tải về chạy file server.js bằng lệnh: node server.js
 3. Mở 2 trình duyệt chrome nhập vào địa chỉ: 192.168.1.102:3000 (nếu máy khác thì dùng lệnh ifconfig để lấy địa chỉ IP máy rồi thay vào dòng 29 bên trang trangchu.ejs) sẽ hiện lên giao diện như sau:
 
-![co caro](Screenshot from 2017-06-24 22-13-10.png)
+![cho](2.png)
 
 4. Tiến hành gõ tên đăng nhập để tạo người chơi
 5. Sau khi tiến hành chơi người chơi thứ 2 đạt 5 ô X thì sẽ báo cho người chơi 1 bị thua cuộc và sẽ không cho cả 2 bên click thêm vào bàn cờ nữa kết quả như sau:
 
-![co caro](Screenshot from 2017-06-24 22-19-37.png)
+![co1](1.png)
 
 # Giải thích chương trình 
 
