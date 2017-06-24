@@ -17,15 +17,16 @@
 <body >
 <div id="loginForm" style="margin-bottom: 30px " class="text-center">
     <h3>CHƯƠNG TRÌNH CHƠI CỜ CARO </h3>
+    <h4>DÙNG SOCKET.IO & D3 JS</h4>
     <h4>Nhập vào tên người chơi:</h4>
     <input type="text" id="txtUsername"/>
     <input type="button" value="Register" id="btnRegister">
+    <div id="boxContent"></div>
 </div>
-<div id="boxContent"></div>
-<div id ="qcontent"></div>
+
 <script>
     //ket noi len server
-    var socket = io("http://localhost:3000")
+    var socket = io("192.168.1.102:3000")
     //Buoc2-2: khach hang lang nghe du lieu tu server tra ve cho tat ca
     //khach hang
 
@@ -45,7 +46,7 @@
 
     const div = d3.select("body").append("div").attr("id", "content").style("text-align","center");
     // create <svg>
-    const svg = div.append("svg").attr("width", 1200).attr("height", 600);
+    const svg = div.append("svg").attr("width", 800).attr("height", 600);
     //-------------------------------------------------------
     // loop through 8 rows and 8 columns to draw the chess board
     for (let i = 0; i < 8; i++) {
