@@ -354,5 +354,5 @@ code như sau:
 
                 }
 ```
-# Như vậy trên đây logic từng bước để thực hiện chương trình 
+# Như vậy trên đây logic từng bước để thực hiện chương trình ở cả client và trên server
 
