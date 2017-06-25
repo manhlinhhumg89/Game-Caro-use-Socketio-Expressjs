@@ -67,9 +67,139 @@ y: y) với x, y là tọa độ của ô vuông trên bàn cờ bằng đoạn 
           }
 ```
 * Tương tự cũng như vậy cho các nước đi của người chơi thứ 2.
+## Logic của toàn bộ chương trình như sau:
+### Phía Client
+1. Vì chương trình có sử dụng D3 js, bootstrap, socket.IO do đó có thể dùng link cdn hay dùng thư mục tải về từ trang chủ. Trong chương trình sử dụng link cdn.
+2. Phần logic nằm trong thẻ script
+* Đầu tiên tạo 1 kết nối lên server bằng code sau:
 
+```javascript 
+        var socket = io("192.168.1.102:3000")
+        trong đó: 192.168.1.102 là địa chỉ IP của máy
+```
 
+* Tiến hành nhập tên người chơi vào ô input và phát sự kiện "socket.emit gửi lên server" mục đích nhập tên người chơi để tạo mảng kiểm tra sau này.
 
+```javascript 
+        $(document).ready(function () {
+        //nguoi choi emit ten dang nhap len server
+            $("#btnRegister").click(function () {
+                socket.emit("client-send-name", $("#txtUsername").val())
+            })
+         })
+``` 
+
+* Sau khi gửi lên server thì server trả về  tên người chơi cho cả 2 người chơi bằng lệnh sau:
+
+```javascript 
+        socket.on("server-send-danhsach-user", function (data) {
+            $("#boxContent").html("");
+            data.forEach(function (i) {
+                $("#boxContent").append("<div class='user'>" + i + "</div>")
+             })
+        })
+```
+trong đó: socket.on là lắng nghe sự kiện gửi từ server với name phải trùng tên với name ở trên server
+* Tiếp theo tiến hành vẽ các ô vuông tượng trưng cho bàn cờ bằng code sau:
+
+```javascript 
+        const div = d3.select("body").append("div").attr("id", "content").style("text-align","center");
+         const svg = div.append("svg").attr("width", 800).attr("height", 600);
+         for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            // draw each chess field
+            const box = svg.append("rect")
+                .attr("x", i * 50)
+                .attr("y", j * 50)
+                .attr("width", 50)
+                .attr("height", 50)
+                .attr("id", "b" + i + j)
+                .style("stroke","black")
+                .on("click", function () {
+                    let selected = d3.select(this);
+                    socket.emit("su-kien-click", {x: selected.attr('x'), y: selected.attr('y')})
+
+                });
+            if ((i + j) % 2 === 0) {
+                box.attr("fill", "beige");
+            } else {
+                box.attr("fill", "beige");
+            }
+        }
+        }
+```
+
+- ở mỗi ô vuông ta sẽ gán cho 1 sự kiện click với mục đích khi người chơi click vào 1 ô trên bàn cờ thì tiến hành lấy tọa độ (x,y) của ô vuông vừa click đồng thời sẽ phát 1 sự kiện gửi tọa độ này lên server
+
+* Sau khi người chơi gửi tọa độ (x,y) khi người chơi click vào ô vuông trên bàn cờ thì server lắng nghe sự kiện đó và trả về các giá trị sau:
+- người chơi các thuộc tính của người chơi là 1 đối tượng trong đó có các thuộc tính thông qua biến data {tọa độ x, tọa độ y, giá trị của người chơi}. Ở đây giá trị người có thể là 1 hoặc 0 nếu là 1 thì đánh "X" nếu là 0 thì đánh"0".
+- nếu bị thua tức là thỏa điều kiện thua sau khi kiểm tra ma trận nước đi trên server và sẽ gửi thông điệp không cho người chơi click tiếp vào bàn cờ, code thực hiện như sau:
+- code này thể hiện khi ai sẽ là người đánh "X" hay "0"
+
+```javascript 
+       
+        socket.on("server-send-data", function (data) {
+        console.log("gia tri ma client nhan tu server:")
+        console.log("mang nguoi choi :" + data.ArrId)
+        console.log("Id:" + data.name);
+        console.log("nguoi cho thu:", data.nguoichoi)
+        console.log("Ma tran cac nuoc di:",data.Board)
+        console.log("Gia tri cua nguoi choi:"+ data.value)
+        console.log("x_client:" + data.x);
+        console.log("y_client:" + data.y);
+        let matrix = data.Board;
+        let Cur_Row = parseInt(data.x);
+        let Cur_Col = parseInt(data.y);
+        let Value = parseInt(data.value);
+        const tick = svg
+            .append("text")
+            .attr("x", parseInt(data.x))
+            .attr("y", parseInt(data.y))
+            .attr("text-anchor", "middle")
+            .attr("dx", 50 / 2)
+            .attr("dy", 50 / 2 + 8)
+            .text(function () {
+                if (data.nguoichoi === 1) {
+                    return "X"
+                }
+                else if (data.nguoichoi === 0) {
+                    return "O"
+                }
+            })
+            .style("font-weight", "bold")
+            .style("font-size", "30px")
+            .style("fill", function () {
+                if (data.nguoichoi === 1) {
+                    return "000066"
+                }
+                else if (data.nguoichoi === 0) {
+                    return "FF0000"
+                }
+            })
+
+        })
+```
+
+- code thể hiện khi người thua thì sẽ in lên mà hình đối thủ string="BAN DA BI THUA" với data được gửi từ server
+
+```javascript 
+         socket.on("phat-su-kien-thang-thua",function (data) {
+        const lost = svg
+            .append("text")
+            .attr("x",400)
+            .attr("y",200)
+            .text(data)
+            .style("fill","red")
+            .style("font-size", "40px")
+        })
+```
+- code thể hiện không cho cả 2 người chơi click vào màn hình khi 1 trong 2 người chơi bị thua cuộc
+
+```javascript 
+         socket.on("khong-cho-doi-thu-click-khi-thua",function () {
+            $('#content').css('pointer-events', 'none');
+        })
+```
 
 
 
