@@ -299,10 +299,60 @@ trong đó: socket.on là lắng nghe sự kiện gửi từ server với name p
 
 ![co1](4.png)
 
+- server sẽ hứng sự kiện "client-send-name" từ phía client gửi lên và sẽ push vào mảng mangUser và gán cho biến socket một thuộc tính mới là Username = data đồng thời gửi lại mảng mangUser về cho cả 2 người chơi thể hiện bằng code sau:
 
 
+```javascript 
+         //lang nghe su kien tu client gui len
+        socket.on("client-send-name", function (data) {
+            if (mangUser.length > 2) {
+                socket.emit("send-dki-that-bai")
+            }
+            else {
+                mangUser.push(data);
+                socket.Username = data;
+                io.sockets.emit("server-send-danhsach-user", mangUser)
+            }
+        })
+```
+- server hứng sự kiện "su-kien-click" từ phía client sự kiện này được gửi lên mỗi khi người chơi click vào 1 vuông trên bàn cờ với data là (x,y)
+- code để hứng sự kiện click từ người chơi gửi lên như sau:
 
+![co1](5.png)
 
+- trong đó dòng 172: biến vitri sẽ tìm xem khi mà người chơi click từ phía client thì dữ liệu gửi lên có chứa thuộc tính socket.Username đã được tạo ra trước đó mục đích dòng biến này được tạo ra để xác định xem người mà click từ phía client đó người thứ mấy trong mangUser.
+- dòng 174 và 175 khai sẽ là biến thể hiện cho vị trí của ô click tương ứng với dòng nào và cột nào trên ma trận.
+- dòng 177 sẽ kiểm tra người chơi có trong mảng người chơi hay không ở đây mangnguoichoi chứa luân phiên các username của người chơi nhập vào mảng này động và tăng dần, 
+- dòng 178 sẽ đưa vào các phần tử được đưa vào đầu mảng bằng lệnh unshift() vì chỉ cần so sánh với phần tử đầu tiên xem có trùng nhau không
+- dòng 179 sẽ kiểm tra xem đó là người chơi 1 hay 2
+- nếu là người chơi 1 thì sẽ add giá trị 1 vào hàng và cột tương ứng (dòng 181)
+- đồng thời sẽ gửi về cho cả 2 người chơi dữ liệu bằng sự kiện "server-send-data" với sự kiện này sẽ sang phía client để biết có tác dụng như thế nào(dòng 181 -> dòng 190)
+- Tiến hành kiểm tra theo các phương ngang, thẳng dứng, đường chéo chính, đường chéo phụ xem có thỏa mãn điều kiện 5 ô liên tiếp có cùng giá trị hay không (với cả 2 người chơi)
+code như sau: 
 
+```javascript 
+        if (Horizontal(Arr_Board, Row, Columb, 1)) {
+                        string = "BAN DA THUA CUOC";
+                        socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
+                        socket.broadcast.emit("phat-su-kien-thang-thua", string);
+                    }
+                    if (Vertically(Arr_Board, Row, Columb, 1)) {
+                        string = "BAN DA THUA CUOC";
+                        socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
+                        socket.broadcast.emit("phat-su-kien-thang-thua", string);
+                    }
+                    if (Diagonal(Arr_Board, Row, Columb, 1)) {
+                        string = "BAN DA THUA CUOC";
+                        socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
+                        socket.broadcast.emit("phat-su-kien-thang-thua", string);
+                    }
+                    if (Diagonal_main(Arr_Board, Row, Columb, 1)) {
+                        string = "BAN DA THUA CUOC";
+                        socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
+                        socket.broadcast.emit("phat-su-kien-thang-thua", string);
+                    }
 
+                }
+```
+# Như vậy trên đây logic từng bước để thực hiện chương trình 
 
