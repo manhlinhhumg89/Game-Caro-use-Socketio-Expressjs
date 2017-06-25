@@ -201,10 +201,103 @@ trong đó: socket.on là lắng nghe sự kiện gửi từ server với name p
         })
 ```
 
+### Phía Server
+
+1. Trong chương trình có dùng express để kết nối tới server nên ta cấu hình cho server như sau:
+
+```javascript 
+         const express = require("express")
+        let app = express();
+        //vi trang web minh la co rat nhieu file javascript hay css
+        // ma cu moi lan co request cua khach hang gui len ma lai tao ra thi khong duoc
+        //cho nen phia server minh se tao 1 thu muc la public
+        //va tat ca cac file de trong public khach hang truy cap dc het
+        app.use(express.static("./public"));//-> tất cả các requet gui len thi khach hang di vao  public ma tim
+        app.set("view engine", "ejs")
+        app.set("/views", "./views")//thu muc chua "trangchu"
+        let server = require("http").Server(app);
+        //khai bao socket
+        var io = require("socket.io")(server)
+        server.listen(3000);
+        //lang nghe co nguoi ket noi len server
+```
+2. Tạo mảng 1 chiều chứa danh sách người chơi và ma trận 2 chiều (8x8)chứa các nước đi của mỗi người chơi được gửi lên từ client
+- code khởi tạo mảng và ma trận như sau:
+
+```javascript 
+         let mangUser = [];
+        let mangnguoichoi = [];
+        //Tao ra mang ban co trong do cac cell co gia tri ban dau la 0
+        //muc dich tao ra ma tran ban co nay de xet thang thua cho nguoi choi
+        //dung method cua Array
+        Array.matrix = function (n, init) {
+            let mat = [];
+            for (let i = 0; i < n; i++) {
+                a = [];
+                for (let j = 0; j < n; j++) {
+                    a[j] = init;
+                }
+                mat[i] = a;
+            }
+            return mat;
+        }
+        let Arr_Board = Array.matrix(8, 0)
+```
+- Sau khi khởi tạo xong thì trên server có 1 ma trận kích thước 8x8 với giá trị ban đầu là 0
+
+```javascript 
+            [[ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+             [ 0, 0, 0, 0, 0, 0, 0, 0 ]]
+```
+- Tiếp theo tiến hành xây dựng các phương thức kiểm tra thắng thua dùng ma trận trên với các giá trị là 1 và 2(1,2 chỉ là giá trị của người chơi do mình quy ước)
+- Ví dụ nếu trên ma trận có 5 ô thẳng hàng ngang với giá trị của các ô liền nhau đều bằng 1 hoặc 2 thì sẽ giành chiến thắng. 
+- Để kiểm tra được có thỏa mãn hay không thì logic cần xử lý ở đây là: ví dụ khi ta click vào 1 ô thì client gửi giá trị tọa độ ô đó lên server và server sẽ kiểm tra trong ma trận xem ô này đã được đánh hay chưa nếu đánh rồi sẽ có giá trị là 1 hay 2 cón nếu chưa đánh sẽ có giá trị 0. 
+- Phương thức Horizontal sẽ tiến hành kiểm tra theo hàng ngang xem có 5 ô liền nhau có cùng giá trị hay không bằng cách cho duyệt từ vị trí ô hiện tại sang phía bên trái và bên phải của nó nếu thỏa mãn điều kiện >= 5 thì sẽ trả về true còn không chỉ cần gặp 1 ô có giá trị khác thì ta sẽ dùng câu lệnh "break " để thoát khỏi vòng lặp luôn mà không làm gì cả. 
+- code thực hiện như sau:
 
 
+```javascript 
+         let Horizontal = (Mat, Cur_row, Cur_col, Value) => {
+        //di sang ben trai
+        let count_left = 0;
+        let count_right = 0;
+        //Di sang phia ben trai so voi vi tri hien tai
+        for (let i = Cur_col; i >= 0; i--) {
+            if (Mat[Cur_row][i] === Value) {
+                count_left++;
+            }
+            else {
+                break;
+            }
+        }
+         //Di sang phia ben phai so voi vi tri hien tai
+        for (let j = Cur_col + 1; j < 8; j++) {
+            if (Mat[Cur_row][j] === Value) {
+                count_right++;
+            }
+            else {
+                break;
+            }
+        }
+        if (count_right + count_left >= 5) {
+            return 1;
+        }
+        }
+        trong đó: Mat là ma trận được lưu ở server
+                  Cur_row là vị trí hiện tại của ô được click tương ứng với hàng của ô đó trên ma trận
+                  Cur_col là vị trí hiện tại của ô được click tương ứng với cột của ô đó trên ma trận
+                  Value giá trị của người chơi có thể là 1 hay 2
+```
+- 4 phương thức kiểm tra theo các phương khác nhau cũng xử lý gần như tương tự
+3. Server nhận kết nối từ phía người chơi bằng code sau:
 
-
+![co1](4.png)
 
 
 

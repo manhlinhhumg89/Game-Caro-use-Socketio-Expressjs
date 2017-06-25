@@ -45,43 +45,27 @@ let Arr_Board = Array.matrix(8, 0)
 //Kiểm tra theo phương ngang từ vị trí hiện tại đi sang trái và sang phải đếm xem có đủ 5 quân cùng giá trị thì trả về true
 let Horizontal = (Mat, Cur_row, Cur_col, Value) => {
     //di sang ben trai
-    /*let i = Cur_col;
     let count_left = 0;
     let count_right = 0;
-    while (Mat[Cur_row][i - 1] === Value && i >= 0) {
-        count_left++;
-        i -= 1;
-    }
-    //di sang ben phai
-    let j = Cur_col;
-    while (Mat[Cur_row][j + 1] === Value && j <= 8) {
-        count_right++;
-        j += 1;
-    }
-    if ((count_left + count_right + 1 >= 5)) {
-        return 1;
-    }*/
-    let count_left =0;
-    let count_right =0;
     //Di sang phia ben trai so voi vi tri hien tai
-    for(let i = Cur_col; i>=0; i--){
-        if(Mat[Cur_row][i]===Value){
+    for (let i = Cur_col; i >= 0; i--) {
+        if (Mat[Cur_row][i] === Value) {
             count_left++;
         }
-        else{
+        else {
             break;
         }
     }
     //Di sang phia ben phai so voi vi tri hien tai
-    for(let j = Cur_col+1;j< 8; j++){
-        if(Mat[Cur_row][j]===Value){
+    for (let j = Cur_col + 1; j < 8; j++) {
+        if (Mat[Cur_row][j] === Value) {
             count_right++;
         }
-        else{
+        else {
             break;
         }
     }
-    if(count_right + count_left >=5){
+    if (count_right + count_left >= 5) {
         return 1;
     }
 }
@@ -116,8 +100,8 @@ let Diagonal = (Mat, Cur_row, Cur_col, Value) => {
     //kiểm tra theo phương đường chéo phía trên bên phải so với vị trí quân hiện tại
     let count_right_up = 0;
     let count_left_down = 0;
-    let temp1=0;
-    let temp2=1;
+    let temp1 = 0;
+    let temp2 = 1;
     for (let i = Cur_row; i >= 0; i--) {
         if (Mat[i][Cur_col + temp1] === Value) {
             count_right_up++;
@@ -128,46 +112,46 @@ let Diagonal = (Mat, Cur_row, Cur_col, Value) => {
         }
     }
     //kiểm tra theo phương đường chéo phía dưới bên trái so với vị trí quân hiện tại
-    for (let j = Cur_row+1; j < 8; j++) {
-        if(Mat[j][Cur_col-temp2]===Value){
+    for (let j = Cur_row + 1; j < 8; j++) {
+        if (Mat[j][Cur_col - temp2] === Value) {
             count_left_down++;
             temp2++;
         }
-        else{
+        else {
             break;
         }
     }
-    if(count_right_up + count_left_down >=5){
+    if (count_right_up + count_left_down >= 5) {
         return 1;
     }
 }
 //Kiểm tra theo phương đường chéo chính
-let Diagonal_main = (Mat, Cur_row, Cur_col, Value) =>{
-    let count_right_down =0;
-    let count_left_up =0;
-    let temp1=0;
-    let temp2=1;
+let Diagonal_main = (Mat, Cur_row, Cur_col, Value) => {
+    let count_right_down = 0;
+    let count_left_up = 0;
+    let temp1 = 0;
+    let temp2 = 1;
     //Kiểm tra theo phương đường chéo chính phía trên bên trái so với vị trí quân hiện tại
-    for(let i=Cur_row; i >=0; i--){
-        if(Mat[i][Cur_col -temp1] ===Value){
+    for (let i = Cur_row; i >= 0; i--) {
+        if (Mat[i][Cur_col - temp1] === Value) {
             count_left_up++;
             temp1++;
         }
-        else{
+        else {
             break;
         }
     }
     //Kiểm tra theo phương đường chéo chính phía dưới bên phải so với vị trí quân hiện tại
-    for(let j=Cur_row+1; j<8; j++){
-        if(Mat[j][Cur_col+temp2]===Value){
+    for (let j = Cur_row + 1; j < 8; j++) {
+        if (Mat[j][Cur_col + temp2] === Value) {
             count_right_down++;
             temp2++;
         }
-        else{
+        else {
             break;
         }
     }
-    if(count_right_down + count_left_up >=5){
+    if (count_right_down + count_left_up >= 5) {
         return 1
     }
 }
@@ -205,7 +189,7 @@ io.on("connection", function (socket) {
                         value: 1
                     })
 
-                     if (Horizontal(Arr_Board, Row, Columb, 1)) {
+                    if (Horizontal(Arr_Board, Row, Columb, 1)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
@@ -215,12 +199,12 @@ io.on("connection", function (socket) {
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
                     }
-                    if(Diagonal(Arr_Board, Row, Columb, 1)){
+                    if (Diagonal(Arr_Board, Row, Columb, 1)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
                     }
-                    if(Diagonal_main(Arr_Board, Row, Columb, 1)){
+                    if (Diagonal_main(Arr_Board, Row, Columb, 1)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
@@ -241,7 +225,7 @@ io.on("connection", function (socket) {
                         value: 2
                     })
 
-                     if (Horizontal(Arr_Board, Row, Columb, 2)) {
+                    if (Horizontal(Arr_Board, Row, Columb, 2)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
@@ -251,12 +235,12 @@ io.on("connection", function (socket) {
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
                     }
-                    if(Diagonal(Arr_Board, Row, Columb, 2)){
+                    if (Diagonal(Arr_Board, Row, Columb, 2)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
                     }
-                    if(Diagonal_main(Arr_Board, Row, Columb, 2)){
+                    if (Diagonal_main(Arr_Board, Row, Columb, 2)) {
                         string = "BAN DA THUA CUOC";
                         socket.broadcast.emit("khong-cho-doi-thu-click-khi-thua");
                         socket.broadcast.emit("phat-su-kien-thang-thua", string);
