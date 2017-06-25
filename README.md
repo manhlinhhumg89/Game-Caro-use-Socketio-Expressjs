@@ -36,7 +36,37 @@ Chương trình chơi cờ caro với 2 người chơi (dùng D3 js, socket.io)
 ![co1](1.png)
 
 # Giải thích chương trình 
+## Cách dữ liệu trong chương trình gửi từ client lên server và server trả về cho người chơi như sau:
+* Khi một trong 2 người chơi click lên 1 ô vuông trên bàn cờ thì phía người chơi phát 1 sự kiện gửi lên server và dữ liệu kèm theo đó là một object(x: x,
+y: y) với x, y là tọa độ của ô vuông trên bàn cờ bằng đoạn code như sau:
 
+![co1](3.png)
+
+* Phía server sẽ lắng nghe sự kiện phát ra từ người chơi 1 với dữ liệu nhận được là tọa độ (x,y) của người chơi 1 và đồng thời từ server sau khi lắng nghe sự kiện phát ra từ người chơi 1 thì sẽ add thêm tọa độ (x,y) vừa gửi từ người chơi 1 vào mảng chứa các nước đi trên server và kiểm tra thắng thua sử dụng mảng 2 chiều này, đồng thời sẽ phát lại cho 2 người chơi tọa độ (x,y) của người chơi 1  
+
+```javascript 
+        socket.on("su-kien-click", function (data) {
+        let vitri = mangUser.indexOf(socket.Username)
+        let Columb = data.x / 50;
+        let Row = data.y / 50;
+        //Kiem tra khong cho nguoi choi gui du lieu 2 lan lien tuc len server
+        if (socket.Username !== mangnguoichoi[0]) {
+            mangnguoichoi.unshift(socket.Username);
+            if (vitri === 0) {
+                if (Arr_Board[Row][Columb] === 0) {
+                    Arr_Board[Row][Columb] = 1;
+                    io.sockets.emit("server-send-data", {
+                        name: socket.Username,
+                        x: data.x,
+                        y: data.y,
+                        nguoichoi: vitri,
+                        ArrId: mangnguoichoi,
+                        Board: Arr_Board,
+                        value: 1
+                    })
+          }
+```
+* Tương tự cũng như vậy cho các nước đi của người chơi thứ 2.
 
 
 
