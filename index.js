@@ -31,7 +31,7 @@ Array.matrix = function (n, init) {
     }
     return mat;
 }
-let Arr_Board = Array.matrix(8, 0)
+let Arr_Board = Array.matrix(10, 0)
 //mang ma tran ban co sau khi khoi tao se co dang nhu sau:
 /*[ [ 0, 0, 0, 0, 0, 0, 0, 0 ],
  [ 0, 0, 0, 0, 0, 0, 0, 0 ],
@@ -57,7 +57,7 @@ let Horizontal = (Mat, Cur_row, Cur_col, Value) => {
         }
     }
     //Di sang phia ben phai so voi vi tri hien tai
-    for (let j = Cur_col + 1; j < 8; j++) {
+    for (let j = Cur_col + 1; j < 10; j++) {
         if (Mat[Cur_row][j] === Value) {
             count_right++;
         }
@@ -75,7 +75,7 @@ let Vertically = (Mat, Cur_row, Cur_col, Value) => {
     let i = Cur_row;
     let count_up = 0;
     let count_down = 0;
-    for (let k = Cur_row; k < 8; k++) {
+    for (let k = Cur_row; k < 10; k++) {
         if (Mat[k][Cur_col] === Value) {
             count_down++;
         }
@@ -112,7 +112,7 @@ let Diagonal = (Mat, Cur_row, Cur_col, Value) => {
         }
     }
     //kiểm tra theo phương đường chéo phía dưới bên trái so với vị trí quân hiện tại
-    for (let j = Cur_row + 1; j < 8; j++) {
+    for (let j = Cur_row + 1; j < 10; j++) {
         if (Mat[j][Cur_col - temp2] === Value) {
             count_left_down++;
             temp2++;
@@ -142,7 +142,7 @@ let Diagonal_main = (Mat, Cur_row, Cur_col, Value) => {
         }
     }
     //Kiểm tra theo phương đường chéo chính phía dưới bên phải so với vị trí quân hiện tại
-    for (let j = Cur_row + 1; j < 8; j++) {
+    for (let j = Cur_row + 1; j < 10; j++) {
         if (Mat[j][Cur_col + temp2] === Value) {
             count_right_down++;
             temp2++;
