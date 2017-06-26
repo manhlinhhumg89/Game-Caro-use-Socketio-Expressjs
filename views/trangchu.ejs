@@ -46,17 +46,18 @@
 
     const div = d3.select("body").append("div").attr("id", "content").style("text-align","center");
     // create <svg>
-    const svg = div.append("svg").attr("width", 800).attr("height", 600);
+    const svg = div.append("svg").attr("width", 500).attr("height", 600);
     //-------------------------------------------------------
-    // loop through 8 rows and 8 columns to draw the chess board
-    for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++) {
+    let boxsize =50 // kich thuoc cua moi o vuong
+    let n= 10 // so luong o vuong tren 1 hang
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
             // draw each chess field
             const box = svg.append("rect")
-                .attr("x", i * 50)
-                .attr("y", j * 50)
-                .attr("width", 50)
-                .attr("height", 50)
+                .attr("x", i * boxsize)
+                .attr("y", j * boxsize)
+                .attr("width", boxsize)
+                .attr("height", boxsize)
                 .attr("id", "b" + i + j)
                 .style("stroke","black")
                 .on("click", function () {
@@ -71,17 +72,6 @@
             }
         }
     }
-let cb = (mat,value)=>{
-    let count =0;
-    for(let  i=0;i< 5;i++){
-        if(mat[1][i]===value){
-            count++;
-        }
-        if(count === 5) {
-            console.log("ban da chien thang")
-        }
-    }
-}
     //----------In len man hinh nguoi choi bi thua va nguoi thang cuoc--------
     socket.on("phat-su-kien-thang-thua",function (data) {
         const lost = svg
@@ -89,8 +79,8 @@ let cb = (mat,value)=>{
             .attr("x",200)
             .attr("y",200)
             .text(data)
-            .style("fill","red")
-            .style("font-size", "40px")
+            .style("fill","black")
+            .style("font-size", "30px")
     })
 
       //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co
@@ -117,8 +107,8 @@ let cb = (mat,value)=>{
             .attr("x", parseInt(data.x))
             .attr("y", parseInt(data.y))
             .attr("text-anchor", "middle")
-            .attr("dx", 50 / 2)
-            .attr("dy", 50 / 2 + 8)
+            .attr("dx", boxsize / 2)
+            .attr("dy", boxsize / 2 + 8)
             .text(function () {
                 if (data.nguoichoi === 1) {
                     return "X"
@@ -137,8 +127,6 @@ let cb = (mat,value)=>{
                     return "FF0000"
                 }
             })
-        //kiem tra thang thua voi ma tran tra ve tu server
-        cb(matrix,data.value);
     })
 </script>
 </body>
