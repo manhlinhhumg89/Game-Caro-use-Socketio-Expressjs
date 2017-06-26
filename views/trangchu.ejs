@@ -26,7 +26,7 @@
 
 <script>
     //ket noi len server
-    var socket = io("192.168.1.102:3000")
+    var socket = io("192.168.1.156:3000")
     //Buoc2-2: khach hang lang nghe du lieu tu server tra ve cho tat ca
     //khach hang
 
@@ -86,12 +86,13 @@ let cb = (mat,value)=>{
     socket.on("phat-su-kien-thang-thua",function (data) {
         const lost = svg
             .append("text")
-            .attr("x",400)
+            .attr("x",200)
             .attr("y",200)
             .text(data)
             .style("fill","red")
             .style("font-size", "40px")
     })
+
       //khi 1 trong 2 nguoi choi bi thua thi se khong cho click them vao ban co
     socket.on("khong-cho-doi-thu-click-khi-thua",function () {
         $('#content').css('pointer-events', 'none');
