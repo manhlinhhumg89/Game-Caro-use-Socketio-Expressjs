@@ -1,5 +1,5 @@
 # caro_chess
-Chương trình chơi cờ caro với 2 người chơi (dùng D3 js, socket.io, Express js)
+Chương trình chơi cờ caro với 2 người chơi (dùng thư viện D3 js, socket.io, Express js)
 
 #Giới thiệu nguồn gốc trò chơi cờ Caro
 * Ban đầu loại cờ này được chơi bằng các quân cờ vây (quân cờ màu trắng và đen) trên một bàn cờ vây (19x19). Quân đen đi trước và người chơi lần lượt đặt một quân cờ của họ trên giao điểm còn trống. 
