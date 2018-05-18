@@ -1,4 +1,4 @@
-# caro_chess
+﻿# caro_chess
 Chương trình chơi cờ caro với 2 người chơi (dùng thư viện D3 js, socket.io, Express js)
 
 #Giới thiệu nguồn gốc trò chơi cờ Caro
@@ -355,4 +355,5 @@ code như sau:
                 }
 ```
 # Như vậy trên đây logic từng bước để thực hiện chương trình ở cả client và trên server
+#---------------------------------------------------------------------------------
 
